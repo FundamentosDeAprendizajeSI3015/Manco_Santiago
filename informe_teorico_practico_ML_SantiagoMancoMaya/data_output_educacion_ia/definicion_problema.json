@@ -1,0 +1,21 @@
+{
+  "objetivo": "Predecir si un estudiante está laboralmente preparado (0/1)",
+  "impacto": "Evaluar cómo el uso de IA influye en la preparación laboral",
+  "tipo_problema": "Clasificación binaria supervisada",
+  "variables_numericas": [
+    "promedio_acumulado",
+    "nota_algoritmos",
+    "nota_bases_datos",
+    "horas_estudio_semana"
+  ],
+  "variables_categoricas": [
+    "frecuencia_uso_ia",
+    "dependencia_ia",
+    "aprendizaje_activo"
+  ],
+  "variables_binarias": [
+    "uso_para_codigo",
+    "uso_para_teoria",
+    "proyectos_personales"
+  ]
+}

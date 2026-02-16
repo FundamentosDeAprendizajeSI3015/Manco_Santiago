@@ -1,0 +1,18 @@
+{
+  "promedio_acumulado": {
+    "pearson": 0.6159326788700282,
+    "spearman": 0.6260389072211406
+  },
+  "nota_algoritmos": {
+    "pearson": 0.6302239496656378,
+    "spearman": 0.6400445601719129
+  },
+  "nota_bases_datos": {
+    "pearson": 0.610049516687527,
+    "spearman": 0.6173451980855351
+  },
+  "horas_estudio_semana": {
+    "pearson": 0.5699657379811248,
+    "spearman": 0.5897822139855551
+  }
+}
