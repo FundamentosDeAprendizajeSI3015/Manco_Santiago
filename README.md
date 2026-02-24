@@ -16,7 +16,7 @@ Este repositorio contiene el desarrollo progresivo del ciclo de vida de Machine 
 
 # 📅 Semana 2 – Ciclo de Vida ML con Iris
 
-📂 Archivo: `iris_lifecycle.py`
+📂 Archivo: `manco_santiago_iris_analysis.py`
 
 ## 🎯 Objetivo
 
