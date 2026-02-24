@@ -15,6 +15,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.tree import plot_tree
 from sklearn.metrics import (
     confusion_matrix,
     classification_report,
@@ -162,6 +163,50 @@ rf_model.fit(X_train, y_train)
 
 print("Entrenando Gradient Boosting...")
 gb_model.fit(X_train, y_train)
+
+# ==========================================================
+# 🌳 GRAFICAR UN ÁRBOL DEL RANDOM FOREST
+# ==========================================================
+
+# Obtener el modelo interno ya entrenado
+rf_clf = rf_model.named_steps["classifier"]
+
+# Obtener nombres reales de features después del preprocesamiento
+feature_names = rf_model.named_steps["preprocessor"].get_feature_names_out()
+
+# Seleccionamos el primer árbol del bosque
+tree = rf_clf.estimators_[0]
+
+plt.figure(figsize=(20,10))
+plot_tree(
+    tree,
+    feature_names=feature_names,
+    class_names=["No preparado", "Preparado"],
+    filled=True,
+    max_depth=3   # Limita profundidad para que sea legible
+)
+plt.title("Árbol individual del Random Forest")
+plt.show()
+
+# ==========================================================
+# 🌳 GRAFICAR UN ÁRBOL DEL GRADIENT BOOSTING
+# ==========================================================
+
+gb_clf = gb_model.named_steps["classifier"]
+
+# GradientBoosting guarda los árboles en estimators_[n][0]
+tree_gb = gb_clf.estimators_[0][0]
+
+plt.figure(figsize=(20,10))
+plot_tree(
+    tree_gb,
+    feature_names=feature_names,
+    class_names=["No preparado", "Preparado"],
+    filled=True,
+    max_depth=3
+)
+plt.title("Árbol individual del Gradient Boosting")
+plt.show()
 
 # ==========================================================
 # 🔟 FUNCIÓN DE EVALUACIÓN
