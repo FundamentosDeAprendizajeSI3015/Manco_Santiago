@@ -65,7 +65,7 @@ plt.title("Matriz de Correlación")
 plt.show()
 
 # ==========================================================
-# 4️⃣ LIMPIEZA DE DATOS
+# 4️⃣ LIMPIEZA
 # ==========================================================
 
 print("\nEliminando duplicados...")
@@ -78,7 +78,7 @@ print(data.isnull().sum())
 data.fillna(data.median(numeric_only=True), inplace=True)
 
 # ==========================================================
-# 5️⃣ DEFINICIÓN DE FEATURES Y TARGET
+# 5️⃣ FEATURES Y TARGET
 # ==========================================================
 
 X = data.drop(columns="preparacion_laboral")
@@ -91,7 +91,7 @@ print("\nColumnas numéricas:", list(num_cols))
 print("Columnas categóricas:", list(cat_cols))
 
 # ==========================================================
-# 6️⃣ DIVISIÓN 60 / 20 / 20 (estratificada)
+# 6️⃣ DIVISIÓN 60 / 20 / 20
 # ==========================================================
 
 print("\nDividiendo dataset 60/20/20...")
@@ -110,12 +110,12 @@ X_val, X_test, y_val, y_test = train_test_split(
     random_state=random_state
 )
 
-print(f"Train: {len(X_train)}")
+print(f"\nTrain: {len(X_train)}")
 print(f"Validation: {len(X_val)}")
 print(f"Test: {len(X_test)}")
 
 # ==========================================================
-# 7️⃣ PIPELINE DE PREPROCESAMIENTO
+# 7️⃣ PIPELINE
 # ==========================================================
 
 numeric_transformer = Pipeline(steps=[
@@ -134,7 +134,7 @@ preprocessor = ColumnTransformer(
 )
 
 # ==========================================================
-# 8️⃣ DEFINICIÓN DE MODELOS
+# 8️⃣ MODELOS
 # ==========================================================
 
 rf_model = Pipeline(steps=[
@@ -204,16 +204,22 @@ def evaluar_modelo(modelo, X, y, nombre):
     plt.ylabel("True Positive Rate")
     plt.show()
 
+# ==========================================================
+# 1️⃣1️⃣ EVALUACIÓN TRAIN
+# ==========================================================
+
+evaluar_modelo(rf_model, X_train, y_train, "Random Forest (Train)")
+evaluar_modelo(gb_model, X_train, y_train, "Gradient Boosting (Train)")
 
 # ==========================================================
-# 1️⃣1️⃣ VALIDACIÓN
+# 1️⃣2️⃣ EVALUACIÓN VALIDATION
 # ==========================================================
 
 evaluar_modelo(rf_model, X_val, y_val, "Random Forest (Validation)")
 evaluar_modelo(gb_model, X_val, y_val, "Gradient Boosting (Validation)")
 
 # ==========================================================
-# 1️⃣2️⃣ TEST FINAL
+# 1️⃣3️⃣ EVALUACIÓN TEST
 # ==========================================================
 
 evaluar_modelo(rf_model, X_test, y_test, "Random Forest (Test)")
