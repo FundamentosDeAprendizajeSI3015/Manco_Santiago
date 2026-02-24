@@ -145,7 +145,7 @@ Se generan:
 
 # 📅 Semana 4 – Impacto del Uso de IA en la Preparación Laboral
 
-📂 Script principal: procesamiento del dataset educativo IA
+📂 Archivo: `lecture4_EDA.py`
 
 ## 🎯 Objetivo
 
