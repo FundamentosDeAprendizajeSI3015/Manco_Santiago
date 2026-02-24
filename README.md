@@ -70,7 +70,7 @@ Métricas:
 
 # 📅 Semana 3 – Laboratorio FinTech Sintético (EDA + Preprocesamiento)
 
-📂 Archivo: `lab_fintech_sintetico_2025.py`
+📂 Archivo: `lect_03_manco_santiago_lab_fintech_sintetico_2025.py`
 
 ## 🎯 Objetivo
 
