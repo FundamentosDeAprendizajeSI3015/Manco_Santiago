@@ -1,0 +1,10 @@
+[project]
+name = "ml-training"
+version = "0.1.0"
+description = "ML Training for FIRE_UdeA Classification"
+requires-python = ">=3.9"
+dependencies = [
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "scikit-learn>=1.3.0",
+]
