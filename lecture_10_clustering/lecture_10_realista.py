@@ -284,6 +284,84 @@ if y_real is not None:
     print(f"\nAdjusted Rand Index entre etiquetas reales y KMeans: {ari_score:.4f}")
 
 # =========================
+# 11B. Errores por unidad
+# =========================
+if y_real is not None and "unidad" in df.columns:
+    # Asegurar arrays
+    y_true = np.asarray(y_real)
+    y_pred = np.asarray(labels_kmeans)
+
+    # Como KMeans puede invertir los nombres de los clusters,
+    # probamos ambas asignaciones y elegimos la que dé menos errores
+    if len(np.unique(y_pred)) == 2 and len(np.unique(y_true)) == 2:
+        y_pred_inv = 1 - y_pred
+
+        errores_original = (y_true != y_pred)
+        errores_invertido = (y_true != y_pred_inv)
+
+        if errores_invertido.sum() < errores_original.sum():
+            y_pred_final = y_pred_inv
+            errores = errores_invertido
+            print("\nSe usó la asignación invertida de KMeans para calcular errores.")
+        else:
+            y_pred_final = y_pred
+            errores = errores_original
+            print("\nSe usó la asignación original de KMeans para calcular errores.")
+    else:
+        y_pred_final = y_pred
+        errores = (y_true != y_pred)
+
+    # DataFrame para análisis
+    df_errores = df.copy()
+    df_errores["label_real"] = y_true
+    df_errores["cluster_kmeans_ajustado"] = y_pred_final
+    df_errores["error"] = errores.astype(int)
+
+    # Resumen por unidad
+    resumen_unidad = (
+        df_errores
+        .groupby("unidad")
+        .agg(
+            total_registros=("error", "count"),
+            total_errores=("error", "sum"),
+            tasa_error=("error", "mean")
+        )
+        .sort_values(by=["total_errores", "tasa_error"], ascending=[False, False])
+    )
+
+    print("\nResumen de errores por unidad:")
+    print(resumen_unidad)
+
+    # Unidad con más errores
+    unidad_mas_errores = resumen_unidad.index[0]
+    datos_mas = resumen_unidad.iloc[0]
+
+    # Unidad con menos errores
+    resumen_menos = resumen_unidad.sort_values(
+        by=["total_errores", "tasa_error"], ascending=[True, True]
+    )
+    unidad_menos_errores = resumen_menos.index[0]
+    datos_menos = resumen_menos.iloc[0]
+
+    print("\nUnidad con MÁS errores:")
+    print(
+        f"{unidad_mas_errores} -> "
+        f"{int(datos_mas['total_errores'])} errores de {int(datos_mas['total_registros'])} registros "
+        f"(tasa de error = {datos_mas['tasa_error']:.2%})"
+    )
+
+    print("\nUnidad con MENOS errores:")
+    print(
+        f"{unidad_menos_errores} -> "
+        f"{int(datos_menos['total_errores'])} errores de {int(datos_menos['total_registros'])} registros "
+        f"(tasa de error = {datos_menos['tasa_error']:.2%})"
+    )
+
+    # Guardar resumen
+    resumen_unidad.to_csv("errores_por_unidad.csv")
+    print("\nArchivo guardado: errores_por_unidad.csv")
+
+# =========================
 # 12. Guardar resultados
 # =========================
 df_resultado = df.copy()
