@@ -507,6 +507,255 @@ Se implementa una comparación completa entre **Random Forest y Gradient Boostin
 
 ---
 
+---
+
+# 📅 Semana 8 – Mini Proyecto: Clasificación Financiera FIRE_UdeA con GridSearchCV
+
+📂 Carpeta: `lecture_08_mini_project/`
+
+📂 Archivos: `modelo_aprendizaje.py`, `financial_udea_dashboard/`
+
+## 🎯 Objetivo
+
+Construir un pipeline profesional completo de clasificación para predecir la **situación financiera** de unidades académicas de la Universidad de Antioquia.
+
+Variable objetivo:
+
+```
+label
+```
+
+* `0` → Situación financiera estable
+* `1` → Situación financiera crítica
+
+---
+
+## 🧠 Etapas implementadas
+
+### 1️⃣ Configuración y carga de datos
+
+Se carga el dataset `dataset_sintetico_FIRE_UdeA_realista.csv` con variables financieras por unidad académica y año.
+
+Variables numéricas:
+
+* `ingresos_totales`, `gastos_personal`, `liquidez`, `dias_efectivo`, `cfo`
+* `participacion_ley30`, `participacion_regalias`, `participacion_servicios`, `participacion_matriculas`
+* `hhi_fuentes`, `endeudamiento`, `tendencia_ingresos`, `gp_ratio`
+
+Variables categóricas:
+
+* `unidad`, `anio`
+
+### 2️⃣ EDA completo
+
+* Medidas de tendencia central por tipo de variable
+* Visualizaciones interactivas (Scatter Matrix, Coordenadas Paralelas, Scatter 3D, UMAP 2D y 3D)
+* Histogramas y **Matriz de Correlación**
+
+### 3️⃣ Limpieza de datos
+
+* Eliminación de duplicados
+* Imputación de valores nulos (numéricas → mediana, categóricas → `"Unknown"`)
+
+### 4️⃣ División estratificada
+
+* **60% Train / 20% Validation / 20% Test**
+
+### 5️⃣ Pipeline de preprocesamiento
+
+Mediante `ColumnTransformer`:
+
+* Numéricas → `StandardScaler`
+* Categóricas → `OneHotEncoder`
+
+### 6️⃣ Modelos implementados
+
+#### 🌳 Random Forest
+
+Optimizado con **GridSearchCV** (`cv=5`):
+
+* `n_estimators`, `max_depth`, `min_samples_split`, `min_samples_leaf`, `max_features`, `class_weight`
+
+#### 🚀 Gradient Boosting
+
+Optimizado con **GridSearchCV** (`cv=5`):
+
+* `n_estimators`, `learning_rate`, `max_depth`, `min_samples_split`, `min_samples_leaf`, `subsample`
+
+### 7️⃣ Visualización de árboles
+
+Se grafican árboles individuales de ambos modelos (profundidad = 3) para interpretabilidad.
+
+### 8️⃣ Evaluación completa
+
+En Train, Validation y Test:
+
+* Accuracy, Precision, Recall, F1-score, AUC
+* Matrices de confusión y Curvas ROC
+
+### 🌐 Dashboard Interactivo
+
+Se desarrolló un **dashboard financiero web** en:
+
+```
+financial_udea_dashboard/
+```
+
+📌 Resultado: Pipeline completo con búsqueda exhaustiva de hiperparámetros y dashboard interactivo para análisis financiero universitario.
+
+---
+
+# 📅 Semana 9 – Clustering: KMeans y DBSCAN
+
+📂 Carpeta: `lecture_09_clustering/`
+
+📂 Archivos: `lecture_09.py`, `lecture_09_realista.py`
+
+## 🎯 Objetivo
+
+Aplicar algoritmos de **aprendizaje no supervisado** al dataset FIRE_UdeA para descubrir agrupaciones naturales entre unidades académicas según sus indicadores financieros.
+
+---
+
+## 🧠 Etapas implementadas
+
+### 1️⃣ Carga y separación de variables
+
+Se carga `dataset_sintetico_FIRE_UdeA_realista.csv` y se separa la etiqueta real (`label`) para evaluación posterior.
+
+### 2️⃣ Preprocesamiento
+
+* Numéricas → `SimpleImputer(mean)` + `StandardScaler`
+* Categóricas → `SimpleImputer(most_frequent)` + `OneHotEncoder`
+
+### 3️⃣ Reducción de dimensión con PCA
+
+* Proyección 2D para visualización de los datos antes del clustering
+
+### 4️⃣ Selección de k: método del codo + Silhouette
+
+Se prueban valores de `k` entre 2 y 10:
+
+* Gráfica de **inercia** (método del codo)
+* Gráfica de **Silhouette Score**
+* Se selecciona automáticamente el `k` con mayor silhouette
+
+### 5️⃣ KMeans
+
+* Modelo con `k` óptimo (`n_init=10`)
+* Visualización 2D de clusters en espacio PCA
+
+### 6️⃣ DBSCAN
+
+* Clustering basado en densidad (`eps=1.2`, `min_samples=5`)
+* Identificación de puntos de ruido (etiqueta `-1`)
+* Silhouette calculado excluyendo ruido
+
+### 7️⃣ Comparación
+
+Se comparan KMeans y DBSCAN visualmente sobre las mismas proyecciones PCA.
+
+### 8️⃣ Evaluación contra etiquetas reales
+
+* **Adjusted Rand Index (ARI)** entre clusters KMeans y etiquetas reales
+
+📌 Resultado: Primer acercamiento a clustering no supervisado sobre datos financieros, con evaluación cuantitativa mediante ARI.
+
+---
+
+# 📅 Semana 10 – Clustering Avanzado: Subtractive + Fuzzy C-Means + Análisis de Errores
+
+📂 Carpeta: `lecture_10_clustering/`
+
+📂 Archivos: `lecture_10.py`, `lecture_10_realista.py`, `lecture_10_substractive.py`
+
+## 🎯 Objetivo
+
+Extender el análisis de clustering con algoritmos avanzados (**Subtractive Clustering** y **Fuzzy C-Means**), realizar comparaciones entre cuatro métodos y analizar los errores de clustering por unidad académica.
+
+---
+
+## 🧠 Etapas implementadas
+
+### 1️⃣ Implementación de algoritmos personalizados
+
+Se implementan desde cero dos clases:
+
+#### 🔵 Subtractive Clustering
+
+* Detección automática de número de centros mediante potenciales de densidad
+* Parámetros: `ra`, `rb`, `eps_upper`, `eps_lower`
+* Normalización interna del espacio de características
+
+#### 🟡 Fuzzy C-Means (FCM)
+
+* Asignación borrosa con grado de pertenencia `μ` para cada punto
+* Inicialización opcional con centros del Subtractive Clustering
+
+### 2️⃣ Proyección 2D y 3D con PCA
+
+* Visualización 2D y 3D de los datos crudos antes del clustering
+
+### 3️⃣ KMeans
+
+* Método del codo + Silhouette Score para selección de `k`
+* Visualización en 2D y 3D
+* Centroides proyectados al espacio PCA 3D
+
+### 4️⃣ DBSCAN
+
+* Clustering por densidad con visualización 2D y 3D
+
+### 5️⃣ Subtractive Clustering
+
+* Número de clústeres determinado automáticamente
+* Visualización en 2D y 3D con centros marcados
+
+### 6️⃣ Fuzzy C-Means
+
+* Asignación de etiquetas por máximo grado de pertenencia
+* Visualización de clusters y pertenencias
+
+### 7️⃣ Comparación de los cuatro métodos
+
+Visualización conjunta de KMeans, DBSCAN, Subtractive y FCM en el mismo espacio PCA.
+
+### 8️⃣ Evaluación contra etiquetas reales
+
+* **ARI** para KMeans, Subtractive y Fuzzy C-Means
+* Visualización de etiquetas reales en 3D
+
+### 9️⃣ Análisis de errores por unidad académica
+
+* Alineación de etiquetas KMeans con etiquetas reales (mejor de las dos asignaciones)
+* Cálculo de tasa de error por `unidad`
+* Identificación de la unidad con **más errores** y la de **menos errores**
+* Exportación de resultados:
+
+```
+errores_por_unidad.csv
+resultado_clustering_completo.csv
+```
+
+📌 Resultado: Comparación completa de cuatro algoritmos de clustering con análisis interpretable de errores por unidad académica, incluyendo implementaciones propias de Subtractive Clustering y Fuzzy C-Means.
+
+---
+
+# 📅 Semana 11 – Informe 2 Teórico Práctico
+
+📂 Carpeta: `informe_teorico_practico_02_ML_SantiagoManco/`
+
+El segundo informe consolida el desarrollo completo del proyecto a lo largo del semestre, profundizando en los resultados de los modelos supervisados y no supervisados aplicados al dataset FIRE_UdeA.
+
+Incluye análisis teórico-práctico de:
+
+* Modelos de clasificación (Random Forest, Gradient Boosting) con optimización de hiperparámetros
+* Técnicas de clustering (KMeans, DBSCAN, Subtractive, Fuzzy C-Means)
+* Comparación cuantitativa de algoritmos mediante métricas estándar (Accuracy, AUC, Silhouette, ARI)
+* Interpretación de resultados en el contexto financiero universitario
+
+---
+
 # 🛠 Tecnologías Utilizadas
 
 * Python
@@ -515,4 +764,6 @@ Se implementa una comparación completa entre **Random Forest y Gradient Boostin
 * Scikit-learn
 * Plotly
 * UMAP
-* JSON / Parquet
+* Matplotlib / Seaborn
+* Next.js (dashboard financiero)
+* JSON / Parquet / CSV
